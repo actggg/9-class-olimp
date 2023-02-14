@@ -13,7 +13,7 @@ d = ['https://www.maam.ru/', 'https://iqsha.ru/', 'https://www.uchportal.ru/load
      'https://www.nalog.gov.ru/rn77/fl/'
      ]
 for i in d:
-    x.write(i + ' ## ')
+    x.write(i + '\n')
     print(i)
     resp = requests.get(i)
     # Загружаем текст в объект типа BeautifulSoup.
