@@ -32,9 +32,6 @@ def know_text_in_link(link):
 
 classes = ['business', 'entertainment', 'politics', 'medical', 'graphics', 'historical', 'food', 'space', 'sport',
            'technologie']
-for i in pred([str(know_text_in_link(
-        'https://www.theguardian.com/business/2023/feb/14/us-inflation-eases-seventh-consecutive-month'))]):
-    print(classes[i])
 
 try:
     class MainWidget(QMainWindow):
@@ -50,12 +47,10 @@ try:
             nltk.download('omw-1.4')
 
         def file_helper(self):
-            print(3)
             with open(self.file_input.text(), 'r', encoding='utf8') as f:
                 k = f.read().split()
                 s = []
                 for i in k:
-                    print(i)
                     if know_text_in_link(i) != 0:
                         rist = [classes[pred([str(know_text_in_link(i))])[0]],
                                 classes[pred([str(know_text_in_link(i))])[1]],
@@ -76,7 +71,6 @@ try:
         def link_helper(self):
             s = []
             rist = [classes[pred([str(know_text_in_link(self.link_input.text()))])[0]], classes[pred([str(know_text_in_link(self.link_input.text()))])[1]], classes[pred([str(know_text_in_link(self.link_input.text()))])[2]]]
-            print(rist)
             if rist.count(mode(rist)) != 1:
                 t = mode(rist)
             else:
@@ -91,29 +85,14 @@ try:
             self.table.show()
 
         def text_helper(self):
-            '''
-            print(2222)
-            print(pred['eeeee'])
-            rist = [classes[pred([str(self.text_input.toPlainText())])[0]],
-                    classes[pred([str(self.text_input.toPlainText())])[1]],
-                    classes[pred([str(self.text_input.toPlainText())])[2]]]
-            print(rist)
-            if rist.count(mode(rist)) != 1:
-                t = mode(rist)
-            else:
-                t = '-'
-            '''
             p = pred([str(self.text_input.toPlainText())])[0]
             p2 = pred([str(self.text_input.toPlainText())])[1]
             p3 = pred([str(self.text_input.toPlainText())])[2]
             rist = [p,
                     p2,
                     p3]
-            print(rist)
             if rist.count(mode(rist)) > 1:
-                print(mode(rist))
                 t = classes[mode(rist)]
-                print(t)
             else:
                 t = '-'
             method_class = {'link': self.text_input.toPlainText(),
