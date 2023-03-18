@@ -124,15 +124,17 @@ class Table(QMainWindow):
 
         self.setMinimumSize(QSize(650, 100 + len(metods) * 50))  # Set sizes
         self.setWindowTitle("Результаты с классификацией")  # Set the window title
-        central_widget = QWidget(self)  # Create a central widget
+        central_widget = QWidget(self)  # Create a central widgetb
         self.setCentralWidget(central_widget)  # Install the central widget
 
         grid_layout = QGridLayout(self)  # Create QGridLayout
         central_widget.setLayout(grid_layout)  # Set this layout in central widget
 
+
         self.table = QTableWidget(self)  # Create a table
         self.table.setColumnCount(6)  # Set three columns
-        self.table.setRowCount(len(metods))  # and one row
+        self.table.setRowCount(len(metods))  # and one r.row
+        self.table.setColumnWidth(1, 4)
 
         # Set the table headers
         self.table.setHorizontalHeaderLabels(["Адрес/текст", "GaussianNB", "SVM", "LogReg", 'Итого:', 'Редакция'])
@@ -142,10 +144,14 @@ class Table(QMainWindow):
         self.table.horizontalHeaderItem(2).setToolTip("Column 2 ")
         self.table.horizontalHeaderItem(3).setToolTip("Column 3 ")
         self.table.horizontalHeaderItem(4).setToolTip("sum")
+        self.text_or_link = metods[0]['link']
 
         # Set the alignment to the headers
         for i in range(len(metods)):
-            self.table.setItem(i, 0, QTableWidgetItem(metods[i]['link']))
+            if 'http' in metods[i]['link']:
+                self.table.setItem(i, 0, QTableWidgetItem(metods[i]['link']))
+            else:
+                self.table.setItem(i, 0, QTableWidgetItem(metods[i]['link'][:40]))
             self.table.setItem(i, 1, QTableWidgetItem(metods[i]['Method_1']))
             self.table.setItem(i, 2, QTableWidgetItem(metods[i]['Method_2']))
             self.table.setItem(i, 3, QTableWidgetItem(metods[i]['Method_3']))
@@ -185,7 +191,11 @@ class Table(QMainWindow):
                     if self.table.item(i, 5).text() in classes:
                         con = sqlite3.connect("database.db")
                         cursor = con.cursor()
-                        cursor.execute("INSERT INTO [set](content, class) VALUES(?, ?)", (text, classess[self.table.item(i, 5).text()]))
+                        if 'http' not in text:
+                            cursor.execute("INSERT INTO [set](content, class) VALUES(?, ?)",
+                                           (self.text_or_link, classess[self.table.item(i, 5).text()]))
+                        else:
+                            cursor.execute("INSERT INTO [set](content, class) VALUES(?, ?)", (text, classess[self.table.item(i, 5).text()]))
                         con.commit()
                         cursor.close()
                         con.close()
